@@ -1,5 +1,9 @@
-import type { ActionFunctionArgs, LinksFunction } from "@remix-run/node";
-import { Link, useActionData, useSearchParams } from "@remix-run/react";
+import type {
+  ActionFunctionArgs,
+  LinksFunction,
+  MetaFunction
+} from "@remix-run/node";
+import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 
 import stylesUrl from "~/styles/login.css";
 import { db } from "~/utils/db.server";
@@ -9,6 +13,16 @@ import { createUserSession, login, register } from "~/utils/session.server";
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesUrl }
 ];
+
+export const meta: MetaFunction = () => {
+  const description = "Login to submit your own jokes to Remix Jokes!";
+
+  return [
+    { name: "description", content: description },
+    { name: "twitter:description", content: description },
+    { title: "Remix Jokes | Login" }
+  ];
+};
 
 function validateUsername(username: string) {
   if (username.length < 3) {
@@ -110,12 +124,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export default function Login() {
   const actionData = useActionData<typeof action>();
   const [searchParams] = useSearchParams();
-
   return (
     <div className="container">
       <div className="content" data-light="">
         <h1>Login</h1>
-        <form method="post">
+        <Form method="post">
           <input
             type="hidden"
             name="redirectTo"
@@ -199,7 +212,7 @@ export default function Login() {
           <button type="submit" className="button">
             Submit
           </button>
-        </form>
+        </Form>
       </div>
       <div className="links">
         <ul>
